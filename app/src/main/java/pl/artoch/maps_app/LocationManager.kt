@@ -36,7 +36,7 @@ class LocationManagerImpl(
 
     override fun requestLocationUpdates(onNewLocation: (LatLng) -> Unit) {
         if (Permissions.mapPermissions().all { checkSelfPermission(context, it) == PERMISSION_GRANTED }) {
-            val locationRequest = LocationRequest.Builder(1000L).build()
+            val locationRequest = LocationRequest.Builder(LOCATION_REQUEST_INTERVAL).build()
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
             this.onNewLocation = onNewLocation
         }
@@ -46,5 +46,10 @@ class LocationManagerImpl(
         onNewLocation = null
         locationSource.deactivate()
         fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    private companion object {
+
+        private const val LOCATION_REQUEST_INTERVAL = 1000L
     }
 }
