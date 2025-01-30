@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -39,7 +38,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.LocationSource
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.DefaultMapProperties
 import com.google.maps.android.compose.DefaultMapUiSettings
@@ -62,19 +60,16 @@ class MapsActivity : ComponentActivity() {
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    initialCoordinates: LatLng = LatLng(52.237, 21.017)
+    initialCoordinates: LatLng = LatLng(52.237, 21.017),
+    initialCameraPosition: CameraPosition = CameraPosition.fromLatLngZoom(initialCoordinates, 15f)
 ) {
     val context = LocalContext.current
-    val currentCoordinates = remember { mutableStateOf(initialCoordinates) }
-    val cameraPosition: CameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(initialCoordinates, 15f)
-    }
     val mapPermissions = listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+    val currentCoordinates = remember { mutableStateOf(initialCoordinates) }
+    val cameraPosition = rememberCameraPositionState { position = initialCameraPosition }
     val locationPermissions = rememberMultiplePermissionsState(mapPermissions)
-    val fusedLocationClient: FusedLocationProviderClient = remember {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
-    val locationSource = remember { createLocationSource() }
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val locationSource = remember(::createLocationSource)
     val locationCallback = remember {
         object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -145,18 +140,18 @@ private fun TargetButton(isPermissionsGranted: Boolean, onClick: () -> Unit) {
 }
 
 private fun createLocationSource() = object : LocationSource {
-    private var listener: LocationSource.OnLocationChangedListener? = null
+    private var currentListener: LocationSource.OnLocationChangedListener? = null
 
     override fun activate(listener: LocationSource.OnLocationChangedListener) {
-        this.listener = listener
+        currentListener = listener
     }
 
     override fun deactivate() {
-        this.listener = null
+        currentListener = null
     }
 
     fun onNewLocation(location: Location) {
-        listener?.onLocationChanged(location)
+        currentListener?.onLocationChanged(location)
     }
 }
 
