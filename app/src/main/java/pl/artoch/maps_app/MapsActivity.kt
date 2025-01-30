@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -30,15 +31,16 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.LocationSource
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapColorScheme.FOLLOW_SYSTEM
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.DefaultMapProperties
 import com.google.maps.android.compose.DefaultMapUiSettings
 import com.google.maps.android.compose.GoogleMap
@@ -64,95 +66,105 @@ fun MapScreen(
 ) {
     val context = LocalContext.current
     val currentCoordinates = remember { mutableStateOf(initialCoordinates) }
-    val cameraPosition = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(currentCoordinates.value, 15f)
+    val cameraPosition: CameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(initialCoordinates, 15f)
     }
     val mapPermissions = listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
     val locationPermissions = rememberMultiplePermissionsState(mapPermissions)
-    val focusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-
-    val locationSource = object : LocationSource {
-        private var listener: LocationSource.OnLocationChangedListener? = null
-
-        override fun activate(listener: LocationSource.OnLocationChangedListener) {
-            this.listener = listener
-        }
-
-        override fun deactivate() {
-            this.listener = null
-        }
-
-        fun onNewLocation(location: Location) {
-            listener?.onLocationChanged(location)
+    val fusedLocationClient: FusedLocationProviderClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
+    val locationSource = remember { createLocationSource() }
+    val locationCallback = remember {
+        object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationResult.locations.forEach { location ->
+                    locationSource.onNewLocation(location)
+                    currentCoordinates.value = LatLng(location.latitude, location.longitude)
+                }
+            }
         }
     }
 
-    val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            locationResult.locations.forEach(locationSource::onNewLocation)
-        }
-    }
-
-    DisposableEffect(locationPermissions) {
-        println("DisposableEffect START")
+    LaunchedEffect(locationPermissions.allPermissionsGranted) {
         if (mapPermissions.all { checkSelfPermission(context, it) == PERMISSION_GRANTED }) {
-            focusedLocationClient.requestLocationUpdates(
-                LocationRequest.Builder(1000L).build(),
+            val locationRequest = LocationRequest.Builder(1000L).build()
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
                 locationCallback,
                 Looper.getMainLooper()
             )
-            println("DisposableEffect PERMISSIONS GRANDER")
         }
+    }
+
+    DisposableEffect(Unit) {
         onDispose {
-            println("DisposableEffect STOP")
             locationSource.deactivate()
-            focusedLocationClient.removeLocationUpdates(locationCallback)
+            fusedLocationClient.removeLocationUpdates(locationCallback)
         }
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    if (locationPermissions.allPermissionsGranted) {
-                        cameraPosition.position = CameraPosition.fromLatLngZoom(currentCoordinates.value, cameraPosition.position.zoom)
-                    } else {
-                        locationPermissions.launchMultiplePermissionRequest()
-                    }
-                },
-                shape = CircleShape,
-                contentColor = Color.White,
-                containerColor = contentColor(locationPermissions.allPermissionsGranted)
-            ) {
-                Icon(
-                    modifier = Modifier.sizeIn(24.dp),
-                    painter = painterResource(id = R.drawable.ic_target),
-                    contentDescription = ""
-                )
-            }
+            TargetButton(locationPermissions.allPermissionsGranted, onClick = {
+                if (locationPermissions.allPermissionsGranted) {
+                    cameraPosition.position = cameraPosition.position.updateCoordinates(currentCoordinates.value)
+                } else {
+                    locationPermissions.launchMultiplePermissionRequest()
+                }
+            })
         }
     ) { innerPadding ->
         GoogleMap(
             modifier = modifier.fillMaxSize(),
             contentPadding = innerPadding,
             cameraPositionState = cameraPosition,
-            googleMapOptionsFactory = ::setupMapColorScheme,
             properties = setupMapProperties(locationPermissions.allPermissionsGranted),
             uiSettings = setupMapUiSettings(),
-            locationSource = locationSource
+            locationSource = locationSource,
+            mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM
         )
     }
 }
 
-private fun contentColor(
-    isLocationPermissionsGranted: Boolean
-) = if (isLocationPermissionsGranted) Color(0xFF1C73E8) else Color.Gray
+@Composable
+private fun TargetButton(isPermissionsGranted: Boolean, onClick: () -> Unit) {
+    FloatingActionButton(
+        onClick = onClick,
+        shape = CircleShape,
+        contentColor = Color.White,
+        containerColor = contentColor(isPermissionsGranted)
+    ) {
+        Icon(
+            modifier = Modifier.sizeIn(24.dp),
+            painter = painterResource(id = R.drawable.ic_target),
+            contentDescription = ""
+        )
+    }
+}
 
-private fun setupMapColorScheme() = GoogleMapOptions().apply { mapColorScheme(FOLLOW_SYSTEM) }
+private fun createLocationSource() = object : LocationSource {
+    private var listener: LocationSource.OnLocationChangedListener? = null
 
-private fun setupMapProperties(isPermissionGranted: Boolean) =
-    DefaultMapProperties.copy(isMyLocationEnabled = isPermissionGranted)
+    override fun activate(listener: LocationSource.OnLocationChangedListener) {
+        this.listener = listener
+    }
+
+    override fun deactivate() {
+        this.listener = null
+    }
+
+    fun onNewLocation(location: Location) {
+        listener?.onLocationChanged(location)
+    }
+}
+
+private fun CameraPosition.updateCoordinates(coordinates: LatLng) = CameraPosition.fromLatLngZoom(coordinates, zoom)
+
+private fun contentColor(isPermitted: Boolean) = if (isPermitted) Color(0xFF1C73E8) else Color.Gray
+
+private fun setupMapProperties(isPermitted: Boolean) = DefaultMapProperties.copy(isMyLocationEnabled = isPermitted)
 
 private fun setupMapUiSettings() = DefaultMapUiSettings.copy(
     indoorLevelPickerEnabled = false,
