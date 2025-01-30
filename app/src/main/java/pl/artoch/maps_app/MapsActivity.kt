@@ -33,7 +33,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import pl.artoch.maps_app.location.LocationManagerImpl
 import pl.artoch.maps_app.location.LocationSource
-import pl.artoch.maps_app.permissions.Permissions
+import pl.artoch.maps_app.permissions.Permission
 import pl.artoch.maps_app.ui.theme.MyApplicationTheme
 
 class MapsActivity : ComponentActivity() {
@@ -58,7 +58,7 @@ fun MapScreen(
     val locationManager = remember { LocationManagerImpl(context = context) }
     val currentCoordinates = remember { mutableStateOf(initialCoordinates) }
     val cameraPosition = rememberCameraPositionState { position = initialCameraPosition }
-    val locationPermissions = rememberMultiplePermissionsState(Permissions.mapPermissions())
+    val locationPermissions = rememberMultiplePermissionsState(Permission.mapPermissions())
 
     DisposableEffect(locationPermissions.allPermissionsGranted) {
         locationManager.requestLocationUpdates { location -> currentCoordinates.value = location }

@@ -9,7 +9,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import pl.artoch.maps_app.permissions.Permissions
+import pl.artoch.maps_app.permissions.Permission
 
 interface LocationManager {
 
@@ -36,7 +36,7 @@ class LocationManagerImpl(
     }
 
     override fun requestLocationUpdates(onNewLocation: (LatLng) -> Unit) {
-        if (Permissions.mapPermissions().all { checkSelfPermission(context, it) == PERMISSION_GRANTED }) {
+        if (Permission.mapPermissions().all { checkSelfPermission(context, it) == PERMISSION_GRANTED }) {
             val locationRequest = LocationRequest.Builder(LOCATION_REQUEST_INTERVAL).build()
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
             this.onNewLocation = onNewLocation
