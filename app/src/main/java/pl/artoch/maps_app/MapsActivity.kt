@@ -2,8 +2,6 @@
 
 package pl.artoch.maps_app
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.Looper
@@ -62,10 +60,9 @@ fun MapScreen(
     initialCameraPosition: CameraPosition = CameraPosition.fromLatLngZoom(initialCoordinates, 15f)
 ) {
     val context = LocalContext.current
-    val mapPermissions = listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
     val currentCoordinates = remember { mutableStateOf(initialCoordinates) }
     val cameraPosition = rememberCameraPositionState { position = initialCameraPosition }
-    val locationPermissions = rememberMultiplePermissionsState(mapPermissions)
+    val locationPermissions = rememberMultiplePermissionsState(Permissions.mapPermissions())
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
     val locationSource = LocationSource
     val locationCallback = remember {
@@ -80,7 +77,7 @@ fun MapScreen(
     }
 
     LaunchedEffect(locationPermissions.allPermissionsGranted) {
-        if (mapPermissions.all { checkSelfPermission(context, it) == PERMISSION_GRANTED }) {
+        if (Permissions.mapPermissions().all { checkSelfPermission(context, it) == PERMISSION_GRANTED }) {
             val locationRequest = LocationRequest.Builder(1000L).build()
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
