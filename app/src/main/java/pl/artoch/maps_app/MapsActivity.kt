@@ -5,7 +5,6 @@ package pl.artoch.maps_app
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import androidx.activity.ComponentActivity
@@ -35,7 +34,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.LocationSource
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.ComposeMapColorScheme
@@ -69,7 +67,7 @@ fun MapScreen(
     val cameraPosition = rememberCameraPositionState { position = initialCameraPosition }
     val locationPermissions = rememberMultiplePermissionsState(mapPermissions)
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val locationSource = remember(::createLocationSource)
+    val locationSource = LocationSource
     val locationCallback = remember {
         object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -136,22 +134,6 @@ private fun TargetButton(isPermissionsGranted: Boolean, onClick: () -> Unit) {
             painter = painterResource(id = R.drawable.ic_target),
             contentDescription = ""
         )
-    }
-}
-
-private fun createLocationSource() = object : LocationSource {
-    private var currentListener: LocationSource.OnLocationChangedListener? = null
-
-    override fun activate(listener: LocationSource.OnLocationChangedListener) {
-        currentListener = listener
-    }
-
-    override fun deactivate() {
-        currentListener = null
-    }
-
-    fun onNewLocation(location: Location) {
-        currentListener?.onLocationChanged(location)
     }
 }
 
