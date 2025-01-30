@@ -9,7 +9,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import pl.artoch.maps_app.Permissions
+import pl.artoch.maps_app.permissions.Permissions
 
 interface LocationManager {
 

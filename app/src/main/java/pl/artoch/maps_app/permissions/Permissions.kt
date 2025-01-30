@@ -1,4 +1,4 @@
-package pl.artoch.maps_app
+package pl.artoch.maps_app.permissions
 
 enum class Permissions(val id: String) {
     FINE_LOCATION(android.Manifest.permission.ACCESS_FINE_LOCATION),
