@@ -1,4 +1,4 @@
-package pl.artoch.maps_app
+package pl.artoch.maps_app.location
 
 import android.location.Location
 import com.google.android.gms.maps.LocationSource

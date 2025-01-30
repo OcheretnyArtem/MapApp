@@ -31,6 +31,8 @@ import com.google.maps.android.compose.DefaultMapProperties
 import com.google.maps.android.compose.DefaultMapUiSettings
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
+import pl.artoch.maps_app.location.LocationManagerImpl
+import pl.artoch.maps_app.location.LocationSource
 import pl.artoch.maps_app.ui.theme.MyApplicationTheme
 
 class MapsActivity : ComponentActivity() {

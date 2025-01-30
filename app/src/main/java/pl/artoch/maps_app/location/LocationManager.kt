@@ -1,4 +1,4 @@
-package pl.artoch.maps_app
+package pl.artoch.maps_app.location
 
 import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -9,6 +9,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import pl.artoch.maps_app.Permissions
 
 interface LocationManager {
 
@@ -28,7 +29,7 @@ class LocationManagerImpl(
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.locations.forEach { location ->
-                locationSource.onNewLocation(location)
+                LocationSource.onNewLocation(location)
                 onNewLocation?.invoke(LatLng(location.latitude, location.longitude))
             }
         }
@@ -44,7 +45,7 @@ class LocationManagerImpl(
 
     override fun stopLocationUpdates() {
         onNewLocation = null
-        locationSource.deactivate()
+        LocationSource.deactivate()
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
