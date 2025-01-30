@@ -13,6 +13,8 @@ composeBom = "2025.01.00"
 lifecycleRuntimeKtx = "2.8.7"
 acompanistPermissions = "0.37.0"
 playServicesLocation = "21.3.0"
+hilt = "2.54"
+ksp = "2.1.0-1.0.29"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +31,8 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 acompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "acompanistPermissions"}
+dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
+dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
 
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "composeMaps" }
@@ -39,4 +43,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-android-maps = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "mapsPlugin" }
-
+dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

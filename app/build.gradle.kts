@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.android.maps)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -50,6 +52,8 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.maps.compose)
     implementation(libs.acompanist.permissions)
+    implementation(libs.dagger.hilt)
+    ksp(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
