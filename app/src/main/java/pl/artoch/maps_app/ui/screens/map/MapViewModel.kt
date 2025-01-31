@@ -32,6 +32,7 @@ interface MapContract {
 
     sealed interface Event {
         data class ChangeCameraPosition(val newPosition: CameraPosition) : Event
+        data object AskForMapPermissions : Event
     }
 }
 
@@ -46,7 +47,11 @@ class MapViewModel @Inject constructor(
     override val events = eventsChanel.receiveAsFlow()
 
     override fun onTargetButtonClick() {
-        eventsChanel.trySend(ChangeCameraPosition(currentCameraPosition.value.updateCoordinates(currentLocation.value)))
+        if (viewState.value.isMapPermissionGranted) {
+            eventsChanel.trySend(ChangeCameraPosition(currentCameraPosition.value.updateCoordinates(currentLocation.value)))
+        } else {
+            eventsChanel.trySend(MapContract.Event.AskForMapPermissions)
+        }
     }
 
     override fun onPermissionStateChange(isGranted: Boolean) {
