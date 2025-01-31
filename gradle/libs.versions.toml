@@ -14,6 +14,7 @@ lifecycleRuntimeKtx = "2.8.7"
 acompanistPermissions = "0.37.0"
 playServicesLocation = "21.3.0"
 hilt = "2.54"
+hiltCompose = "1.2.0"
 ksp = "2.1.0-1.0.29"
 
 [libraries]
@@ -32,6 +33,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 acompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "acompanistPermissions"}
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
+dagger-hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltCompose"}
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
 
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }

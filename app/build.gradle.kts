@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.maps.compose)
     implementation(libs.acompanist.permissions)
     implementation(libs.dagger.hilt)
+    implementation(libs.dagger.hilt.compose)
     ksp(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
