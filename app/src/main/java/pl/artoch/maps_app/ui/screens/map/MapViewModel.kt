@@ -1,4 +1,4 @@
-package pl.artoch.maps_app
+package pl.artoch.maps_app.ui.screens.map
 
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.CameraPosition
@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import pl.artoch.maps_app.MapsContract.Event.ChangeCameraPosition
 import pl.artoch.maps_app.location.LocationManager
+import pl.artoch.maps_app.ui.screens.map.MapContract.Event.ChangeCameraPosition
 import javax.inject.Inject
 
-interface MapsContract {
+interface MapContract {
     interface ViewModel {
         val viewState: StateFlow<ViewState>
         val events: Flow<Event>
@@ -36,13 +36,13 @@ interface MapsContract {
 }
 
 @HiltViewModel
-class MapsViewModel @Inject constructor(
+class MapViewModel @Inject constructor(
     private val locationManager: LocationManager
-) : ViewModel(), MapsContract.ViewModel {
-    private val eventsChanel = Channel<MapsContract.Event>()
+) : ViewModel(), MapContract.ViewModel {
+    private val eventsChanel = Channel<MapContract.Event>()
     private val currentLocation = MutableStateFlow(locationWarsaw)
     private val currentCameraPosition = MutableStateFlow(initialCameraPosition())
-    override val viewState = MutableStateFlow(MapsContract.ViewState(false))
+    override val viewState = MutableStateFlow(MapContract.ViewState(false))
     override val events = eventsChanel.receiveAsFlow()
 
     override fun onTargetButtonClick() {
