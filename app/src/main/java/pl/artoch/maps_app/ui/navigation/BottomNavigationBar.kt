@@ -16,12 +16,12 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import pl.artoch.maps_app.ui.navigation.screens.Screen
+import pl.artoch.maps_app.ui.navigation.items.NavigationItems
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val tabs = Screen.TabScreen.items
+    val tabs = NavigationItems.TabScreen.items
     var selectedTab by remember { mutableStateOf(tabs.first().route) }
     LaunchedEffect(navBackStackEntry) {
         navBackStackEntry?.let { entry ->
@@ -52,7 +52,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 @Composable
 private fun RowScope.BottomNavigationBarItem(
-    item: Screen.TabScreen,
+    item: NavigationItems.TabScreen,
     isSelected: Boolean,
     onItemClick: () -> Unit
 ) {
@@ -77,7 +77,7 @@ private fun RowScope.BottomNavigationBarItem(
 }
 
 @Composable
-private fun SetupBadges(item: Screen.TabScreen) {
+private fun SetupBadges(item: NavigationItems.TabScreen) {
     when {
         item.badgeCount != null -> Badge {
             Text(text = item.badgeCount.toString())
