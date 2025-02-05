@@ -16,7 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import pl.artoch.maps_app.ui.navigation.item.Screen
+import pl.artoch.maps_app.ui.navigation.screens.Screen
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {

@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import pl.artoch.maps_app.ui.navigation.item.Screen
+import pl.artoch.maps_app.ui.navigation.screens.Screen
 
 @Composable
 fun ChartScreen(navController: NavController) {

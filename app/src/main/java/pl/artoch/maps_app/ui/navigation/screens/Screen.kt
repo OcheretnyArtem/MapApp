@@ -1,4 +1,4 @@
-package pl.artoch.maps_app.ui.navigation.item
+package pl.artoch.maps_app.ui.navigation.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email

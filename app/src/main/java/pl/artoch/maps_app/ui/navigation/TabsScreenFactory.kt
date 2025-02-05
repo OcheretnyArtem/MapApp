@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
-import pl.artoch.maps_app.ui.navigation.item.Screen
+import pl.artoch.maps_app.ui.navigation.screens.Screen
 import pl.artoch.maps_app.ui.screens.chart.ChartScreen
 import pl.artoch.maps_app.ui.screens.home.HomeScreen
 import pl.artoch.maps_app.ui.screens.map.MapScreen
