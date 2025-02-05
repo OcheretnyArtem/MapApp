@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.ui.graphics.vector.ImageVector
+import kotlinx.serialization.Serializable
 
 sealed interface Screen {
     val route: String
@@ -57,7 +58,8 @@ sealed interface Screen {
         override val route: String = this.toString()
     }
 
-    data object NestedScreen : Screen {
+    @Serializable
+    data class NestedScreen(val username: String) : Screen {
         override val route: String = this.toString()
     }
 
