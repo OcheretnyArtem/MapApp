@@ -2,19 +2,23 @@
 
 package pl.artoch.maps_app.ui.screens.map
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -36,11 +40,12 @@ import pl.artoch.maps_app.ui.screens.map.MapContract.Event.ChangeCameraPosition
 import pl.artoch.maps_app.ui.theme.MyApplicationTheme
 
 @Composable
-fun MapScreen(viewModel: MapContract.ViewModel = hiltViewModel<MapViewModel>()) {
+fun MapScreen(viewModel: MapContract.ViewModel, innerPadding: PaddingValues) {
     val viewState by viewModel.viewState.collectAsState()
     MapScreen(
         viewState = viewState,
         events = viewModel.events,
+        innerPadding = innerPadding,
         onTargetButtonClick = viewModel::onTargetButtonClick,
         onPermissionStateChange = viewModel::onPermissionStateChange,
         onCameraPositionChange = viewModel::onCameraPositionChange,
@@ -52,6 +57,7 @@ fun MapScreen(viewModel: MapContract.ViewModel = hiltViewModel<MapViewModel>()) 
 private fun MapScreen(
     viewState: MapContract.ViewState,
     events: Flow<MapContract.Event>,
+    innerPadding: PaddingValues,
     onTargetButtonClick: () -> Unit,
     onPermissionStateChange: (Boolean) -> Unit,
     onCameraPositionChange: (CameraPosition) -> Unit,
@@ -72,10 +78,12 @@ private fun MapScreen(
     LaunchedEffect(cameraPosition.isMoving) {
         onCameraPositionChange(cameraPosition.position)
     }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        floatingActionButton = { TargetButton(viewState.isMapPermissionGranted, onTargetButtonClick) }
-    ) { innerPadding ->
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .consumeWindowInsets(innerPadding)
+    ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             contentPadding = innerPadding,
@@ -84,13 +92,21 @@ private fun MapScreen(
             uiSettings = setupMapUiSettings(),
             mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM
         )
+        TargetButton(
+            isPermissionsGranted = viewState.isMapPermissionGranted,
+            modifier = Modifier
+                .padding(end = 16.dp, bottom = innerPadding.calculateBottomPadding() + 16.dp)
+                .align(Alignment.BottomEnd),
+            onClick = onTargetButtonClick
+        )
     }
 }
 
 @Composable
-private fun TargetButton(isPermissionsGranted: Boolean, onClick: () -> Unit) {
+private fun TargetButton(isPermissionsGranted: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
     FloatingActionButton(
         onClick = onClick,
+        modifier = modifier,
         shape = CircleShape,
         contentColor = Color.White,
         containerColor = contentColor(isPermissionsGranted)
@@ -123,6 +139,7 @@ private fun MapScreenPreview() {
         MapScreen(
             viewState = MapContract.ViewState(isMapPermissionGranted = true),
             events = MutableSharedFlow(replay = 0),
+            innerPadding = PaddingValues(),
             onTargetButtonClick = {},
             onCameraPositionChange = {},
             onPermissionStateChange = {},

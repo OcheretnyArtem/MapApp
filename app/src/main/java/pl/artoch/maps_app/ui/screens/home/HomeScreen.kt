@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import pl.artoch.maps_app.ui.navigation.item.NavigationItem
+import pl.artoch.maps_app.ui.navigation.item.Screen
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -26,7 +26,7 @@ fun HomeScreen(navController: NavController) {
         Text("HOME")
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { navController.navigate(NavigationItem.NestedScreen.route) },
+            onClick = { navController.navigate(Screen.NestedScreen.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
