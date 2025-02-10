@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
-import pl.artoch.maps_app.ui.screens.map.MapScreen
+import pl.artoch.maps_app.ui.navigation.graphs.RootNavigationGraph
 import pl.artoch.maps_app.ui.theme.MyApplicationTheme
 
 @AndroidEntryPoint
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                MapScreen()
+                RootNavigationGraph()
             }
         }
     }
