@@ -31,7 +31,7 @@ import pl.artoch.maps_app.ui.components.stories.Stories
 @Composable
 fun StoriesScreen(viewModel: StoriesContract.ViewModel, innerPadding: PaddingValues, navController: NavController) {
     val viewState = viewModel.viewState.collectAsState()
-    StoriesScreen(
+    StoriesScreenUi(
         viewState = viewState.value,
         innerPadding = innerPadding,
         onStoriesEnds = navController::popBackStack
@@ -39,7 +39,7 @@ fun StoriesScreen(viewModel: StoriesContract.ViewModel, innerPadding: PaddingVal
 }
 
 @Composable
-private fun StoriesScreen(
+private fun StoriesScreenUi(
     viewState: StoriesContract.ViewState,
     innerPadding: PaddingValues,
     onStoriesEnds: () -> Unit
@@ -112,7 +112,7 @@ private fun VideoStory(url: String) {
 @Preview
 @Composable
 private fun StoriesScreenPreview() {
-    StoriesScreen(
+    StoriesScreenUi(
         viewState = StoriesContract.ViewState(stories = listOf()),
         innerPadding = PaddingValues(),
         onStoriesEnds = {}
