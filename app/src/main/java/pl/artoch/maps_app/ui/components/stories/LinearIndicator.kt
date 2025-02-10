@@ -1,4 +1,4 @@
-package pl.artoch.maps_app.ui.screens.stories
+package pl.artoch.maps_app.ui.components.stories
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -6,7 +6,6 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.progressSemantics
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults.ProgressAnimationSpec
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,21 +52,22 @@ fun LinearIndicator(
         }
     }
 
-    SegmentedProgressIndicator(
+    RoundRectProgressIndicator(
         progress = animatedProgress,
         modifier = modifier,
-        color = progressColor,
-        backgroundColor = trackColor
+        progressColor = progressColor,
+        trackColor = trackColor,
+        strokeWidth = 4.dp
     )
 }
 
 @Composable
-fun SegmentedProgressIndicator(
+private fun RoundRectProgressIndicator(
     progress: Float,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary,
-    backgroundColor: Color = color.copy(alpha = 0.25f),
-    strokeWidth: Dp = 4.dp,
+    progressColor: Color,
+    trackColor: Color,
+    strokeWidth: Dp,
 ) {
     val stroke: Float = LocalDensity.current.run { strokeWidth.toPx() }
     Canvas(
@@ -77,12 +77,12 @@ fun SegmentedProgressIndicator(
             .height(strokeWidth)
             .focusable()
     ) {
-        drawSegment(1f, backgroundColor, stroke)
-        drawSegment(progress, color, stroke)
+        drawRoundRectSegment(1f, trackColor, stroke)
+        drawRoundRectSegment(progress, progressColor, stroke)
     }
 }
 
-private fun DrawScope.drawSegment(
+private fun DrawScope.drawRoundRectSegment(
     progress: Float,
     color: Color,
     strokeWidth: Float,
