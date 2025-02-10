@@ -26,7 +26,7 @@ fun HomeScreen(navController: NavController) {
         Text("HOME")
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { navController.navigate(NavigationItems.NestedScreen(username = "Some Username")) },
+            onClick = { navController.navigate(NavigationItems.StoriesScreen.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)

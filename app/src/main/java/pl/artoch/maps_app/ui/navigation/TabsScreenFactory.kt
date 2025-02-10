@@ -10,16 +10,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
-import androidx.navigation.toRoute
 import pl.artoch.maps_app.ui.navigation.items.NavigationItems
 import pl.artoch.maps_app.ui.screens.chart.ChartScreen
 import pl.artoch.maps_app.ui.screens.home.HomeScreen
 import pl.artoch.maps_app.ui.screens.map.MapScreen
 import pl.artoch.maps_app.ui.screens.map.MapViewModel
-import pl.artoch.maps_app.ui.screens.nested.NestedScreen
-import pl.artoch.maps_app.ui.screens.nested.NestedScreenContainer
-import pl.artoch.maps_app.ui.screens.nested.NestedScreenViewModel
 import pl.artoch.maps_app.ui.screens.overlay.OverlayScreen
+import pl.artoch.maps_app.ui.screens.stories.StoriesScreen
+import pl.artoch.maps_app.ui.screens.stories.StoriesViewModel
 
 @Composable
 fun TabsScreenFactory(
@@ -37,12 +35,12 @@ fun TabsScreenFactory(
         composable(NavigationItems.ChartScreen.route) {
             ChartScreen(navController = navController)
         }
-        composable<NavigationItems.NestedScreen> { backStackEntry ->
-            val nestedNavigationItems: NavigationItems.NestedScreen = backStackEntry.toRoute()
-            val viewModel = hiltViewModel<NestedScreenViewModel, NestedScreenContainer.Factory> { factory ->
-                factory.create(nestedNavigationItems.username)
-            }
-            NestedScreen(viewModel = viewModel)
+        composable(NavigationItems.StoriesScreen.route) {
+            StoriesScreen(
+                viewModel = hiltViewModel<StoriesViewModel>(),
+                innerPadding = insetPaddings,
+                navController = navController
+            )
         }
         dialog(
             route = NavigationItems.OverlayScreen.route,

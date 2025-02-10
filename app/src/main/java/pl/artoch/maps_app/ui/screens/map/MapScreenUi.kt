@@ -42,7 +42,7 @@ import pl.artoch.maps_app.ui.theme.MyApplicationTheme
 @Composable
 fun MapScreen(viewModel: MapContract.ViewModel, innerPadding: PaddingValues) {
     val viewState by viewModel.viewState.collectAsState()
-    MapScreen(
+    MapScreenUi(
         viewState = viewState,
         events = viewModel.events,
         innerPadding = innerPadding,
@@ -54,7 +54,7 @@ fun MapScreen(viewModel: MapContract.ViewModel, innerPadding: PaddingValues) {
 }
 
 @Composable
-private fun MapScreen(
+private fun MapScreenUi(
     viewState: MapContract.ViewState,
     events: Flow<MapContract.Event>,
     innerPadding: PaddingValues,
@@ -136,7 +136,7 @@ private const val ANIMATION_DURATION = 1000
 @Composable
 private fun MapScreenPreview() {
     MyApplicationTheme {
-        MapScreen(
+        MapScreenUi(
             viewState = MapContract.ViewState(isMapPermissionGranted = true),
             events = MutableSharedFlow(replay = 0),
             innerPadding = PaddingValues(),

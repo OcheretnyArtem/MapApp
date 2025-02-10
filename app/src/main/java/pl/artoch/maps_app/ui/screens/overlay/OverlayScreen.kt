@@ -1,6 +1,5 @@
 package pl.artoch.maps_app.ui.screens.overlay
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,13 +13,10 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun OverlayScreen(navController: NavHostController) {
-    BackHandler {
-        navController.popBackStack()
-    }
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(Color.Black),
         contentAlignment = Alignment.Center
     ) {
         Button(onClick = { navController.popBackStack() }) {

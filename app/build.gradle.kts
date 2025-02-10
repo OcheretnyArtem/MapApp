@@ -50,28 +50,19 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
+    implementation(libs.bundles.core)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
+    implementation(libs.bundles.compose)
     implementation(libs.navigation.compose)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.play.services.maps)
-    implementation(libs.play.services.location)
-    implementation(libs.maps.compose)
+    implementation(libs.bundles.maps)
     implementation(libs.acompanist.permissions)
-    implementation(libs.dagger.hilt)
-    implementation(libs.dagger.hilt.compose)
+    implementation(libs.serialization.json)
+    implementation(libs.bundles.coil)
+    implementation(libs.bundles.hilt)
+    implementation(libs.bundles.exoplayer)
     ksp(libs.dagger.hilt.compiler)
-    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.bundles.android.test)
+    debugImplementation(libs.bundles.compose.tooling)
 }
