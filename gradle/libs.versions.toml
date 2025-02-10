@@ -19,6 +19,7 @@ ksp = "2.1.0-1.0.29"
 composeNavigation = "2.8.6"
 serialization = "1.8.0"
 coil = "3.1.0"
+exoplayer = "1.5.1"
 
 [libraries]
 #Core
@@ -54,6 +55,9 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "composeMaps" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+#Exoplayer
+exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "exoplayer" }
+exoplayer-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "exoplayer" }
 
 [bundles]
 core = ["androidx-core-ktx", "androidx-lifecycle-runtime-ktx"]
@@ -63,6 +67,7 @@ coil = ["coil", "coil-compose"]
 maps = ["play-services-maps", "maps-compose", "play-services-location"]
 compose = ["androidx-activity-compose", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3"]
 compose-tooling = ["androidx-ui-tooling", "androidx-ui-test-manifest"]
+exoplayer = ["exoplayer", "exoplayer-ui"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

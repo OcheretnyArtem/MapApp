@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.bundles.coil)
     implementation(libs.bundles.hilt)
+    implementation(libs.bundles.exoplayer)
     ksp(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
